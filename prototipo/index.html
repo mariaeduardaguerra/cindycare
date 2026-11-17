@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CindyCare — Cuidados com seu Pet</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --fundo: #151214;
+      --painel: #211b1f;
+      --borda: #403039;
+      --texto: #f5e9ef;
+      --suave: #bca6b2;
+      --destaque: #e3a4b9;
+      --verde: #a6d5bc;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--fundo);
+      color: var(--texto);
+      font: 15px Arial, sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--destaque);
+      outline-offset: 4px;
+    }
+
+    header,
+    main,
+    footer {
+      max-width: 1100px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .marca {
+      margin: 0;
+      font: 32px Georgia, serif;
+      color: var(--destaque);
+    }
+
+    .subtitulo,
+    .suave {
+      color: var(--suave);
+    }
+
+    .subtitulo {
+      margin: 7px 0 0;
+      font-size: 12px;
+    }
+
+    .seletor {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 18px 0;
+      margin-bottom: 24px;
+      border-top: 1px solid var(--borda);
+      border-bottom: 1px solid var(--borda);
+    }
+
+    button {
+      padding: 11px 15px;
+      border: 1px solid var(--borda);
+      border-radius: 9px;
+      background: var(--painel);
+      color: var(--texto);
+    }
+
+    button:hover {
+      border-color: var(--destaque);
+    }
+
+    button.ativo,
+    .principal {
+      background: var(--destaque);
+      border-color: var(--destaque);
+      color: #28151e;
+    }
+
+    .perigo {
+      color: #ffb3ba;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-width: 0;
+      padding: 11px;
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      background: #171316;
+      color: var(--texto);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-size: 13px;
+    }
+
+    .seletor label {
+      margin: 0;
+    }
+
+    .seletor select {
+      width: 160px;
+    }
+
+    .titulo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: Georgia, serif;
+    }
+
+    h1 {
+      margin: 0 0 9px;
+      font-size: 32px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .titulo p {
+      margin: 0;
+      color: var(--suave);
+    }
+
+    .indicadores {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 15px;
+      margin-bottom: 28px;
+    }
+
+    .cartao {
+      padding: 22px;
+      margin-bottom: 14px;
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      background: var(--painel);
+      overflow-wrap: anywhere;
+    }
+
+    .indicadores .cartao strong {
+      display: block;
+      margin-bottom: 9px;
+      font: 30px Georgia, serif;
+      color: var(--destaque);
+    }
+
+    .indicadores .cartao span {
+      color: var(--suave);
+      font-size: 12px;
+    }
+
+    .registro {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .registro h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .registro p {
+      margin: 7px 0;
+      line-height: 1.5;
+    }
+
+    .acoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .acoes button {
+      padding: 8px 11px;
+      font-size: 12px;
+    }
+
+    .atraso {
+      color: #ffb3ba;
+    }
+
+    .concluida {
+      color: var(--verde);
+    }
+
+    .filtros {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 15px;
+    }
+
+    .aviso {
+      color: var(--suave);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .erro {
+      color: #ffb3ba;
+      min-height: 20px;
+      line-height: 1.5;
+    }
+
+    dialog {
+      width: calc(100% - 30px);
+      max-width: 540px;
+      max-height: 90vh;
+      padding: 26px;
+      overflow-y: auto;
+      border: 1px solid var(--borda);
+      border-radius: 15px;
+      background: var(--painel);
+      color: var(--texto);
+    }
+
+    dialog::backdrop {
+      background: #000b;
+    }
+
+    dialog .acoes {
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    footer {
+      border-top: 1px solid var(--borda);
+      color: var(--suave);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    #mensagem {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      z-index: 10;
+      max-width: calc(100% - 30px);
+      padding: 14px 20px;
+      border-radius: 9px;
+      background: var(--destaque);
+      color: #28151e;
+      transform: translateX(-50%);
+    }
+
+    #mensagem:empty {
+      display: none;
+    }
+
+    @media (max-width: 600px) {
+      header,
+      main,
+      footer {
+        padding: 18px;
+      }
+
+      .indicadores,
+      .filtros {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      nav button {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div>
+      <p class="marca">🐾 CindyCare</p>
+      <p class="subtitulo">Pequenos cuidados. Uma vida de companhia.</p>
+    </div>
+
+    <div class="seletor">
+      <label for="animalAtual">Meu animal</label>
+      <select id="animalAtual"></select>
+
+      <button id="adicionarAnimal" class="principal">
+        + Animal
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <nav aria-label="Áreas do sistema">
+      <button data-pagina="painel">Painel</button>
+      <button data-pagina="perfil">Perfil</button>
+      <button data-pagina="tarefas">Cuidados</button>
+      <button data-pagina="vacinas">Vacinas</button>
+      <button data-pagina="consultas">Consultas</button>
+      <button data-pagina="despesas">Despesas</button>
+      <button data-pagina="historico">Histórico</button>
+    </nav>
+
+    <section id="conteudo"></section>
+  </main>
+
+  <footer>
+    Protótipo educacional com dados fictícios.
+    Os registros ficam apenas neste navegador, sem sincronização.
+    Limpar os dados do navegador pode apagar a coleção.
+    <br>
+    Cindy inspirou o nome; cada tutor pode cadastrar seus próprios animais.
+  </footer>
+
+  <dialog id="janela">
+    <form id="formulario">
+      <h2 id="tituloFormulario"></h2>
+      <div id="campos"></div>
+      <p class="erro" id="erroFormulario" role="alert"></p>
+
+      <div class="acoes">
+        <button type="button" id="cancelarFormulario">
+          Cancelar
+        </button>
+
+        <button type="submit" class="principal">
+          Salvar
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="mensagem" role="status" aria-live="polite"></div>
+
+  <script>
+    const CHAVE = "cindycare-prototipo-v1";
+    const buscar = (seletor) => document.querySelector(seletor);
+
+    let paginaAtual = "painel";
+    let contextoFormulario = null;
+    let temporizador;
+
+    let filtros = {
+      categoria: "",
+      inicio: "",
+      fim: ""
+    };
+
+    function criarId() {
+      return globalThis.crypto?.randomUUID?.() ||
+        `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    }
+
+    // Datas de calendário são tratadas como datas locais.
+    function hoje() {
+      const data = new Date();
+
+      return [
+        data.getFullYear(),
+        String(data.getMonth() + 1).padStart(2, "0"),
+        String(data.getDate()).padStart(2, "0")
+      ].join("-");
+    }
+
+    function somarDias(texto, quantidade) {
+      const [ano, mes, dia] = texto.split("-").map(Number);
+      const data = new Date(ano, mes - 1, dia);
+
+      data.setDate(data.getDate() + quantidade);
+
+      return [
+        data.getFullYear(),
+        String(data.getMonth() + 1).padStart(2, "0"),
+        String(data.getDate()).padStart(2, "0")
+      ].join("-");
+    }
+
+    function formatarData(texto) {
+      return texto ? texto.split("-").reverse().join("/") : "Não informado";
+    }
+
+    function dinheiro(centavos) {
+      return (centavos / 100).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function escapar(texto) {
+      const caracteres = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      };
+
+      return String(texto ?? "").replace(
+        /[&<>"']/g,
+        (caractere) => caracteres[caractere]
+      );
+    }
+
+    function mensagem(texto) {
+      buscar("#mensagem").textContent = texto;
+
+      clearTimeout(temporizador);
+
+      temporizador = setTimeout(() => {
+        buscar("#mensagem").textContent = "";
+      }, 4000);
+    }
+
+    const exemplo = {
+      animais: [
+        {
+          id: "animal-exemplo",
+          nome: "Cindy",
+          especie: "Cachorro",
+          raca: "Maltipoo",
+          nascimento: "",
+          adocao: "",
+          peso: "8"
+        }
+      ],
+
+      selecionado: "animal-exemplo",
+
+      tarefas: [
+        {
+          id: "tarefa-exemplo",
+          animalId: "animal-exemplo",
+          titulo: "Escovar os pelos",
+          categoria: "Higiene",
+          data: hoje(),
+          recorrencia: "2",
+          status: "pendente",
+          realizadaEm: ""
+        }
+      ],
+
+      vacinas: [],
+      consultas: [],
+      despesas: []
+    };
+
+    let dados;
+
+    try {
+      const salvo = localStorage.getItem(CHAVE);
+      dados = salvo ? JSON.parse(salvo) : structuredClone(exemplo);
+
+      const listas = [
+        "animais",
+        "tarefas",
+        "vacinas",
+        "consultas",
+        "despesas"
+      ];
+
+      if (!dados || !listas.every((nome) => Array.isArray(dados[nome]))) {
+        throw new Error("Formato inválido");
+      }
+    } catch {
+      dados = structuredClone(exemplo);
+
+      alert(
+        "Não foi possível carregar os dados locais. " +
+        "O protótipo exibirá os dados de exemplo."
+      );
+    }
+
+    // Só altera o estado exibido se o armazenamento funcionar.
+    function persistir(novosDados) {
+      try {
+        localStorage.setItem(CHAVE, JSON.stringify(novosDados));
+        dados = novosDados;
+
+        renderizar();
+        mensagem("Alteração salva neste navegador.");
+
+        return true;
+      } catch {
+        mensagem(
+          "Não foi possível salvar. A alteração não foi aplicada."
+        );
+
+        return false;
+      }
+    }
+
+    function animalSelecionado() {
+      return dados.animais.find(
+        (animal) => animal.id === dados.selecionado
+      );
+    }
+
+    function registros(tipo) {
+      return dados[tipo].filter(
+        (registro) => registro.animalId === dados.selecionado
+      );
+    }
+
+    function titulo(texto, descricao, tipo) {
+      return `
+        <div class="titulo">
+          <div>
+            <h1>${escapar(texto)}</h1>
+            <p>${escapar(descricao)}</p>
+          </div>
+
+          ${
+            tipo
+              ? `<button class="principal" data-novo="${tipo}">
+                   + Adicionar
+                 </button>`
+              : ""
+          }
+        </div>
+      `;
+    }
+
+    function listaVazia() {
+      return `
+        <div class="cartao suave">
+          Nenhum registro encontrado para este animal.
+        </div>
+      `;
+    }
+
+    function cartao(tipo, registro, permitirAcoes = true) {
+      let nome;
+      let descricao;
+      let complemento = "";
+
+      if (tipo === "tarefas") {
+        nome = registro.titulo;
+
+        const atrasada =
+          registro.status === "pendente" &&
+          registro.data < hoje();
+
+        descricao = `
+          Previsto: ${formatarData(registro.data)}
+          · ${escapar(registro.categoria)}
+        `;
+
+        complemento = `
+          <p class="${atrasada ? "atraso" : "suave"}">
+            ${atrasada ? "Atrasada" : escapar(registro.status)}
+            ${
+              registro.recorrencia
+                ? ` · a cada ${registro.recorrencia} dias`
+                : ""
+            }
+          </p>
+
+          ${
+            registro.realizadaEm
+              ? `<p class="concluida">
+                   Realizado: ${formatarData(registro.realizadaEm)}
+                 </p>`
+              : ""
+          }
+        `;
+      }
+
+      if (tipo === "vacinas") {
+        nome = registro.nome;
+        descricao = `Aplicação: ${formatarData(registro.data)}`;
+
+        complemento = `
+          <p class="suave">
+            Próxima dose: ${formatarData(registro.proxima)}
+          </p>
+          <p>${escapar(registro.observacoes)}</p>
+        `;
+      }
+
+      if (tipo === "consultas") {
+        nome = registro.motivo;
+        descricao = `Consulta: ${formatarData(registro.data)}`;
+
+        complemento = `
+          <p>${escapar(registro.observacoes)}</p>
+        `;
+      }
+
+      if (tipo === "despesas") {
+        nome = registro.descricao;
+
+        descricao = `
+          ${formatarData(registro.data)}
+          · ${escapar(registro.categoria)}
+        `;
+
+        complemento = `<p>${dinheiro(registro.centavos)}</p>`;
+      }
+
+      let acoes = "";
+
+      if (permitirAcoes) {
+        if (tipo === "tarefas" && registro.status === "pendente") {
+          acoes = `
+            <button data-acao="concluir">Concluir</button>
+            <button data-acao="editar">Editar</button>
+            <button data-acao="cancelar">Cancelar tarefa</button>
+          `;
+        } else if (tipo !== "tarefas") {
+          acoes = `
+            <button data-acao="editar">Editar</button>
+            <button class="perigo" data-acao="excluir">Excluir</button>
+          `;
+        }
+      }
+
+      return `
+        <article
+          class="cartao registro"
+          data-tipo="${tipo}"
+          data-id="${escapar(registro.id)}"
+        >
+          <div>
+            <h3>${escapar(nome)}</h3>
+            <p class="suave">${descricao}</p>
+            ${complemento}
+          </div>
+
+          <div class="acoes">${acoes}</div>
+        </article>
+      `;
+    }
+
+    function renderizar() {
+      const seletor = buscar("#animalAtual");
+
+      seletor.innerHTML = dados.animais.map((animal) => {
+        return `
+          <option value="${escapar(animal.id)}">
+            ${escapar(animal.nome)}
+          </option>
+        `;
+      }).join("");
+
+      seletor.value = dados.selecionado;
+
+      document.querySelectorAll("[data-pagina]").forEach((botao) => {
+        botao.classList.toggle(
+          "ativo",
+          botao.dataset.pagina === paginaAtual
+        );
+      });
+
+      const animal = animalSelecionado();
+      const conteudo = buscar("#conteudo");
+
+      if (!animal) {
+        conteudo.innerHTML = titulo(
+          "Vamos começar?",
+          "Cadastre um animal para organizar seus cuidados.",
+          "animais"
+        );
+
+        return;
+      }
+
+      if (paginaAtual === "painel") {
+        const pendentes = registros("tarefas")
+          .filter((tarefa) => tarefa.status === "pendente")
+          .sort((primeira, segunda) => {
+            return primeira.data.localeCompare(segunda.data);
+          });
+
+        const atrasadas = pendentes.filter(
+          (tarefa) => tarefa.data < hoje()
+        );
+
+        const mesAtual = hoje().slice(0, 7);
+
+        const total = registros("despesas")
+          .filter((despesa) => despesa.data.startsWith(mesAtual))
+          .reduce((soma, despesa) => soma + despesa.centavos, 0);
+
+        conteudo.innerHTML = `
+          ${titulo(
+            `Um carinho a mais para ${animal.nome}`,
+            "Os próximos cuidados, sem perder nenhum detalhe."
+          )}
+
+          <div class="indicadores">
+            <div class="cartao">
+              <strong>${pendentes.length}</strong>
+              <span>Cuidados pendentes</span>
+            </div>
+
+            <div class="cartao">
+              <strong>${atrasadas.length}</strong>
+              <span>Cuidados atrasados</span>
+            </div>
+
+            <div class="cartao">
+              <strong>${dinheiro(total)}</strong>
+              <span>Despesas do mês · ${mesAtual.split("-").reverse().join("/")}</span>
+            </div>
+          </div>
+
+          <h2>Próximos cuidados</h2>
+
+          ${
+            pendentes.map((item) => cartao("tarefas", item)).join("")
+            || listaVazia()
+          }
+        `;
+
+        return;
+      }
+
+      if (paginaAtual === "perfil") {
+        conteudo.innerHTML = `
+          ${titulo("Perfil do animal", animal.nome)}
+
+          <div class="cartao">
+            <h2>${escapar(animal.nome)}</h2>
+            <p>Espécie: ${escapar(animal.especie)}</p>
+            <p>Raça: ${escapar(animal.raca || "Não informada")}</p>
+            <p>Nascimento: ${formatarData(animal.nascimento)}</p>
+            <p>Adoção: ${formatarData(animal.adocao)}</p>
+            <p>Peso: ${animal.peso ? escapar(animal.peso) + " kg" : "Não informado"}</p>
+
+            <button id="editarPerfil">Editar perfil</button>
+          </div>
+        `;
+
+        return;
+      }
+
+      if (paginaAtual === "historico") {
+        const historico = [
+          ...registros("vacinas").map((item) => ({
+            tipo: "vacinas",
+            item,
+            data: item.data
+          })),
+
+          ...registros("consultas").map((item) => ({
+            tipo: "consultas",
+            item,
+            data: item.data
+          })),
+
+          ...registros("tarefas")
+            .filter((item) => item.status === "concluida")
+            .map((item) => ({
+              tipo: "tarefas",
+              item,
+              data: item.realizadaEm
+            }))
+        ].sort((primeiro, segundo) => {
+          return segundo.data.localeCompare(primeiro.data);
+        });
+
+        conteudo.innerHTML = `
+          ${titulo("Uma história de cuidados", animal.nome)}
+
+          ${
+            historico.map((registro) => {
+              return cartao(registro.tipo, registro.item, false);
+            }).join("") || listaVazia()
+          }
+        `;
+
+        return;
+      }
+
+      if (paginaAtual === "despesas") {
+        renderizarDespesas();
+        return;
+      }
+
+      const nomes = {
+        tarefas: "Cuidados",
+        vacinas: "Vacinas",
+        consultas: "Consultas"
+      };
+
+      const lista = registros(paginaAtual).sort((primeiro, segundo) => {
+        return primeiro.data.localeCompare(segundo.data);
+      });
+
+      conteudo.innerHTML = `
+        ${titulo(nomes[paginaAtual], animal.nome, paginaAtual)}
+
+        ${
+          lista.map((item) => cartao(paginaAtual, item)).join("")
+          || listaVazia()
+        }
+      `;
+    }
+
+    function renderizarDespesas() {
+      const categorias = [
+        ...new Set(registros("despesas").map((item) => item.categoria))
+      ];
+
+      buscar("#conteudo").innerHTML = `
+        ${titulo("Despesas", animalSelecionado().nome, "despesas")}
+
+        <div class="filtros">
+          <div>
+            <label for="filtroCategoria">Categoria</label>
+
+            <select id="filtroCategoria">
+              <option value="">Todas</option>
+
+              ${categorias.map((categoria) => {
+                return `
+                  <option value="${escapar(categoria)}">
+                    ${escapar(categoria)}
+                  </option>
+                `;
+              }).join("")}
+            </select>
+          </div>
+
+          <div>
+            <label for="filtroInicio">De</label>
+            <input id="filtroInicio" type="date">
+          </div>
+
+          <div>
+            <label for="filtroFim">Até</label>
+            <input id="filtroFim" type="date">
+          </div>
+        </div>
+
+        <p id="erroFiltro" class="erro" role="alert"></p>
+        <h2 id="totalDespesas"></h2>
+        <div id="listaDespesas"></div>
+      `;
+
+      buscar("#filtroCategoria").value = filtros.categoria;
+      buscar("#filtroInicio").value = filtros.inicio;
+      buscar("#filtroFim").value = filtros.fim;
+
+      ["#filtroCategoria", "#filtroInicio", "#filtroFim"].forEach(
+        (seletor) => {
+          buscar(seletor).onchange = atualizarFiltro;
+        }
+      );
+
+      atualizarFiltro();
+    }
+
+    function atualizarFiltro() {
+      filtros = {
+        categoria: buscar("#filtroCategoria").value,
+        inicio: buscar("#filtroInicio").value,
+        fim: buscar("#filtroFim").value
+      };
+
+      const erro = buscar("#erroFiltro");
+
+      if (
+        filtros.inicio &&
+        filtros.fim &&
+        filtros.fim < filtros.inicio
+      ) {
+        erro.textContent = "A data final não pode ser anterior à inicial.";
+        buscar("#totalDespesas").textContent = "";
+        buscar("#listaDespesas").innerHTML = "";
+
+        return;
+      }
+
+      erro.textContent = "";
+
+      const lista = registros("despesas").filter((item) => {
+        return (
+          (!filtros.categoria || item.categoria === filtros.categoria) &&
+          (!filtros.inicio || item.data >= filtros.inicio) &&
+          (!filtros.fim || item.data <= filtros.fim)
+        );
+      });
+
+      const total = lista.reduce(
+        (soma, item) => soma + item.centavos,
+        0
+      );
+
+      buscar("#totalDespesas").textContent = `Total: ${dinheiro(total)}`;
+
+      buscar("#listaDespesas").innerHTML =
+        lista.map((item) => cartao("despesas", item)).join("")
+        || listaVazia();
+    }
+
+    function campo(nome, rotulo, tipo = "text", obrigatorio = true) {
+      return `
+        <label for="campo-${nome}">${rotulo}</label>
+
+        <input
+          id="campo-${nome}"
+          name="${nome}"
+          type="${tipo}"
+          ${obrigatorio ? "required" : ""}
+        >
+      `;
+    }
+
+    function observacoes() {
+      return `
+        <label for="campo-observacoes">Observações</label>
+        <textarea
+          id="campo-observacoes"
+          name="observacoes"
+        ></textarea>
+      `;
+    }
+
+    function abrirFormulario(tipo, registro = null, acao = "salvar") {
+      contextoFormulario = { tipo, registro, acao };
+
+      buscar("#erroFormulario").textContent = "";
+
+      const nomes = {
+        animais: "Animal",
+        tarefas: "Cuidado",
+        vacinas: "Vacina",
+        consultas: "Consulta",
+        despesas: "Despesa"
+      };
+
+      buscar("#tituloFormulario").textContent =
+        acao === "concluir"
+          ? "Concluir cuidado"
+          : `${registro ? "Editar" : "Adicionar"} ${nomes[tipo]}`;
+
+      let html = "";
+
+      if (acao === "concluir") {
+        html = campo("realizadaEm", "Data de realização", "date");
+      } else if (tipo === "animais") {
+        html =
+          campo("nome", "Nome") +
+          campo("especie", "Espécie") +
+          campo("raca", "Raça", "text", false) +
+          campo("nascimento", "Nascimento", "date", false) +
+          campo("adocao", "Adoção", "date", false) +
+          campo("peso", "Peso em kg", "number", false);
+      } else if (tipo === "tarefas") {
+        html =
+          campo("titulo", "Título") +
+          campo("categoria", "Categoria") +
+          campo("data", "Data prevista", "date") +
+          campo("recorrencia", "Repetir a cada quantos dias? (opcional)", "number", false);
+      } else if (tipo === "vacinas") {
+        html =
+          campo("nome", "Nome da vacina") +
+          campo("data", "Data da aplicação", "date") +
+          campo("proxima", "Próxima dose informada pelo tutor", "date", false) +
+          observacoes();
+      } else if (tipo === "consultas") {
+        html =
+          campo("motivo", "Motivo da consulta") +
+          campo("data", "Data da consulta realizada", "date") +
+          observacoes();
+      } else if (tipo === "despesas") {
+        html =
+          campo("descricao", "Descrição") +
+          campo("categoria", "Categoria") +
+          campo("data", "Data da despesa", "date") +
+          campo("valor", "Valor em reais", "text");
+      }
+
+      buscar("#campos").innerHTML = html;
+
+      const formulario = buscar("#formulario");
+
+      [...formulario.elements].forEach((elemento) => {
+        if (!elemento.name) return;
+
+        let valor = registro?.[elemento.name] ?? "";
+
+        if (elemento.name === "valor" && registro) {
+          valor = (registro.centavos / 100).toFixed(2).replace(".", ",");
+        }
+
+        if (elemento.name === "realizadaEm") {
+          valor = hoje();
+        }
+
+        elemento.value = valor;
+
+        if (
+          elemento.type === "date" &&
+          !["proxima"].includes(elemento.name) &&
+          !(tipo === "tarefas" && elemento.name === "data")
+        ) {
+          elemento.max = hoje();
+        }
+
+        if (elemento.name === "peso") {
+          elemento.step = "any";
+          elemento.min = "0";
+        }
+
+        if (elemento.name === "recorrencia") {
+          elemento.step = "1";
+          elemento.min = "1";
+        }
+      });
+
+      buscar("#janela").showModal();
+    }
+
+    function validar(tipo, valores, acao) {
+      for (const elemento of buscar("#formulario").elements) {
+        if (
+          elemento.required &&
+          !String(valores[elemento.name] || "").trim()
+        ) {
+          throw new Error("Preencha o campo: " +
+            elemento.previousElementSibling.textContent);
+        }
+      }
+
+      if (acao === "concluir") {
+        if (valores.realizadaEm > hoje()) {
+          throw new Error("A data de realização não pode estar no futuro.");
+        }
+
+        return;
+      }
+
+      if (tipo === "animais") {
+        if (valores.nascimento && valores.nascimento > hoje()) {
+          throw new Error("O nascimento não pode estar no futuro.");
+        }
+
+        if (valores.adocao && valores.adocao > hoje()) {
+          throw new Error("A adoção não pode estar no futuro.");
+        }
+
+        if (
+          valores.peso &&
+          (!Number.isFinite(Number(valores.peso)) || Number(valores.peso) <= 0)
+        ) {
+          throw new Error("Informe um peso maior que zero.");
+        }
+      }
+
+      if (["vacinas", "consultas", "despesas"].includes(tipo)) {
+        if (valores.data > hoje()) {
+          throw new Error("A data do registro não pode estar no futuro.");
+        }
+      }
+
+      if (
+        tipo === "vacinas" &&
+        valores.proxima &&
+        valores.proxima <= valores.data
+      ) {
+        throw new Error("A próxima dose deve ser posterior à aplicação.");
+      }
+
+      if (tipo === "tarefas" && valores.recorrencia) {
+        const intervalo = Number(valores.recorrencia);
+
+        if (!Number.isInteger(intervalo) || intervalo <= 0) {
+          throw new Error("A recorrência deve ser um número inteiro maior que zero.");
+        }
+      }
+
+      if (tipo === "despesas") {
+        const valor = valores.valor.trim();
+
+        if (!/^\d+([.,]\d{1,2})?$/.test(valor)) {
+          throw new Error("Informe o valor sem separador de milhar e com até duas casas decimais.");
+        }
+
+        const centavos = Math.round(Number(valor.replace(",", ".")) * 100);
+
+        if (!Number.isSafeInteger(centavos) || centavos <= 0) {
+          throw new Error("O valor deve ser maior que zero e estar dentro do limite permitido.");
+        }
+
+        valores.centavos = centavos;
+        delete valores.valor;
+      }
+    }
+
+    buscar("#formulario").onsubmit = (evento) => {
+      evento.preventDefault();
+
+      const { tipo, registro, acao } = contextoFormulario;
+
+      const valores = Object.fromEntries(
+        new FormData(evento.target).entries()
+      );
+
+      Object.keys(valores).forEach((nome) => {
+        valores[nome] = valores[nome].trim();
+      });
+
+      try {
+        validar(tipo, valores, acao);
+
+        const copia = structuredClone(dados);
+
+        if (acao === "concluir") {
+          const tarefa = copia.tarefas.find(
+            (item) => item.id === registro.id
+          );
+
+          if (!tarefa || tarefa.status !== "pendente") {
+            throw new Error("Somente tarefas pendentes podem ser concluídas.");
+          }
+
+          tarefa.status = "concluida";
+          tarefa.realizadaEm = valores.realizadaEm;
+
+          if (tarefa.recorrencia) {
+            copia.tarefas.push({
+              ...tarefa,
+              id: criarId(),
+              data: somarDias(
+                valores.realizadaEm,
+                Number(tarefa.recorrencia)
+              ),
+              status: "pendente",
+              realizadaEm: ""
+            });
+          }
+        } else if (registro) {
+          const existente = copia[tipo].find(
+            (item) => item.id === registro.id
+          );
+
+          if (tipo === "tarefas" && existente.status !== "pendente") {
+            throw new Error("Somente tarefas pendentes podem ser editadas.");
+          }
+
+          Object.assign(existente, valores);
+        } else {
+          const novo = {
+            ...valores,
+            id: criarId()
+          };
+
+          if (tipo !== "animais") {
+            novo.animalId = dados.selecionado;
+          }
+
+          if (tipo === "tarefas") {
+            novo.status = "pendente";
+            novo.realizadaEm = "";
+          }
+
+          copia[tipo].push(novo);
+
+          if (tipo === "animais") {
+            copia.selecionado = novo.id;
+          }
+        }
+
+        if (persistir(copia)) {
+          buscar("#janela").close();
+        }
+      } catch (erro) {
+        buscar("#erroFormulario").textContent = erro.message;
+      }
+    };
+
+    buscar("#conteudo").onclick = (evento) => {
+      const novo = evento.target.closest("[data-novo]");
+
+      if (novo) {
+        abrirFormulario(novo.dataset.novo);
+        return;
+      }
+
+      if (evento.target.closest("#editarPerfil")) {
+        abrirFormulario("animais", animalSelecionado());
+        return;
+      }
+
+      const botao = evento.target.closest("[data-acao]");
+      if (!botao) return;
+
+      const artigo = botao.closest("[data-id]");
+      const tipo = artigo.dataset.tipo;
+
+      const registro = dados[tipo].find(
+        (item) => item.id === artigo.dataset.id
+      );
+
+      if (!registro) return;
+
+      if (botao.dataset.acao === "editar") {
+        abrirFormulario(tipo, registro);
+      }
+
+      if (botao.dataset.acao === "concluir") {
+        abrirFormulario(tipo, registro, "concluir");
+      }
+
+      if (botao.dataset.acao === "excluir") {
+        if (!confirm("Excluir este registro? Não será possível recuperá-lo.")) {
+          return;
+        }
+
+        const copia = structuredClone(dados);
+
+        copia[tipo] = copia[tipo].filter(
+          (item) => item.id !== registro.id
+        );
+
+        persistir(copia);
+      }
+
+      if (botao.dataset.acao === "cancelar") {
+        if (!confirm("Cancelar esta tarefa?")) return;
+
+        const copia = structuredClone(dados);
+        const tarefa = copia.tarefas.find(
+          (item) => item.id === registro.id
+        );
+
+        if (tarefa.status === "pendente") {
+          tarefa.status = "cancelada";
+          persistir(copia);
+        }
+      }
+    };
+
+    document.querySelectorAll("[data-pagina]").forEach((botao) => {
+      botao.onclick = () => {
+        paginaAtual = botao.dataset.pagina;
+        renderizar();
+      };
+    });
+
+    buscar("#animalAtual").onchange = (evento) => {
+      const copia = structuredClone(dados);
+      copia.selecionado = evento.target.value;
+
+      filtros = { categoria: "", inicio: "", fim: "" };
+
+      if (!persistir(copia)) {
+        renderizar();
+      }
+    };
+
+    buscar("#adicionarAnimal").onclick = () => {
+      abrirFormulario("animais");
+    };
+
+    buscar("#cancelarFormulario").onclick = () => {
+      buscar("#janela").close();
+    };
+
+    renderizar();
+  </script>
+</body>
+</html>
